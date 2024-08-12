@@ -18,6 +18,7 @@ function FlashCard() {
   const [flipped, setFlipped] = useState(false);
   const [newQuestion, setNewQuestion] = useState('');
   const [newAnswer, setNewAnswer] = useState('');
+  const [progress, setProgress] = useState(new Map());
 
   useEffect(() => {
     fetchFlashcards();
@@ -65,6 +66,29 @@ function FlashCard() {
     setFlipped(false);
   };
 
+  const markAsKnown = (id) => {
+    setProgress((prev) => new Map(prev).set(id, true));
+    nextCard();
+  };
+
+  const markAsUnknown = (id) => {
+    setProgress((prev) => new Map(prev).set(id, false));
+    nextCard();
+  };
+
+  const reviewUnknownCards = () => {
+    const unknownCards = flashcards.filter((card) => progress.get(card.id) === false);
+    if (unknownCards.length > 0) {
+      setFlashcards(unknownCards);
+      setCurrentCard(0);
+    } else {
+      alert("No unknown cards to review!");
+    }
+  };
+
+  const knownCount = Array.from(progress.values()).filter((v) => v === true).length;
+  const unknownCount = Array.from(progress.values()).filter((v) => v === false).length;
+
   return (
     <Box mt={4}>
       <Container maxWidth="sm">
@@ -103,6 +127,18 @@ function FlashCard() {
               >
                 Delete
               </Button>
+              <Button
+                color="success"
+                onClick={() => markAsKnown(flashcards[currentCard].id)}
+              >
+                Known
+              </Button>
+              <Button
+                color="error"
+                onClick={() => markAsUnknown(flashcards[currentCard].id)}
+              >
+                Unknown
+              </Button>
             </Box>
           </div>
         ) : (
@@ -110,6 +146,12 @@ function FlashCard() {
             No flashcards available
           </Typography>
         )}
+
+        <Box mt={3}>
+          <Typography variant="h6" align="center">
+            Known: {knownCount} | Unknown: {unknownCount}
+          </Typography>
+        </Box>
 
         <Box mt={3}>
           <Typography variant="h4" align="center" gutterBottom>
@@ -134,6 +176,11 @@ function FlashCard() {
           <Box mt={2}>
             <Button variant="contained" color="primary" fullWidth onClick={addFlashcard}>
               Add Flashcard
+            </Button>
+          </Box>
+          <Box mt={2}>
+            <Button variant="contained" color="secondary" fullWidth onClick={reviewUnknownCards}>
+              Review Unknown Cards
             </Button>
           </Box>
         </Box>
