@@ -10,7 +10,7 @@ import {
 import { ArrowBack, ArrowForward, Delete } from '@mui/icons-material';
 import './Theme.css';
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL.replace(/\/+$/, '')
 
 function FlashCard() {
   const [flashcards, setFlashcards] = useState([]);
