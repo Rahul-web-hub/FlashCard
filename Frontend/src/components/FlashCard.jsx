@@ -8,46 +8,11 @@ import {
   Box,
   Grid,
   IconButton,
-  Paper,
 } from '@mui/material';
 import { ArrowBack, ArrowForward, Delete } from '@mui/icons-material';
-import { styled } from '@mui/system';
+import './Theme.css';
 
 const API_URL = import.meta.env.VITE_API_URL.replace(/\/+$/, '');
-
-const FlashcardContainer = styled(Paper)(({ theme }) => ({
-  perspective: '1000px',
-  width: '100%',
-  height: '300px',
-  cursor: 'pointer',
-  transition: 'transform 0.6s',
-  transformStyle: 'preserve-3d',
-  '&:hover': {
-    transform: 'scale(1.05)',
-  },
-}));
-
-const FlashcardContent = styled(Box)(({ theme, flipped }) => ({
-  position: 'absolute',
-  width: '100%',
-  height: '100%',
-  backfaceVisibility: 'hidden',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  padding: theme.spacing(2),
-  backgroundColor: theme.palette.background.paper,
-  borderRadius: theme.shape.borderRadius,
-  boxShadow: theme.shadows[3],
-  transition: 'transform 0.6s',
-  transform: flipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
-}));
-
-const FlashcardBack = styled(FlashcardContent)(({ theme }) => ({
-  transform: 'rotateY(180deg)',
-  backgroundColor: theme.palette.primary.light,
-  color: theme.palette.primary.contrastText,
-}));
 
 function FlashCard() {
   const [flashcards, setFlashcards] = useState([]);
@@ -134,49 +99,46 @@ function FlashCard() {
         </Typography>
 
         {flashcards.length > 0 ? (
-          <Box mb={4}>
-            <FlashcardContainer
-              elevation={3}
-              onClick={() => setFlipped(!flipped)}
-            >
-              <FlashcardContent flipped={!flipped}>
-                <Typography variant="h5" align="center">
+          <div
+            className={`flashcard-container ${flipped ? 'flipped' : ''}`}
+            onClick={() => setFlipped(!flipped)}
+          >
+            <div className={`flashcard ${flipped ? 'flipped' : ''}`}>
+              <div className="flashcard-front">
+                <Typography variant="h6" align="center">
                   {flashcards[currentCard].question}
                 </Typography>
-              </FlashcardContent>
-              <FlashcardBack flipped={flipped}>
-                <Typography variant="h5" align="center">
+              </div>
+              <div className="flashcard-back">
+                <Typography variant="h6" align="center">
                   {flashcards[currentCard].answer}
                 </Typography>
-              </FlashcardBack>
-            </FlashcardContainer>
-            <Box display="flex" justifyContent="space-between" mt={2}>
+              </div>
+            </div>
+            <Box display="flex" justifyContent="space-between" p={2} flexWrap="wrap">
               <IconButton onClick={prevCard}>
                 <ArrowBack />
               </IconButton>
-              <Box>
-                <Button color="success" onClick={() => markAsKnown(flashcards[currentCard].id)}>
-                  Known
-                </Button>
-                <Button color="error" onClick={() => markAsUnknown(flashcards[currentCard].id)}>
-                  Unknown
-                </Button>
-              </Box>
               <IconButton onClick={nextCard}>
                 <ArrowForward />
               </IconButton>
-            </Box>
-            <Box display="flex" justifyContent="center" mt={1}>
               <IconButton color="error" onClick={() => deleteFlashcard(flashcards[currentCard].id)}>
                 <Delete />
               </IconButton>
+              <Button color="success" onClick={() => markAsKnown(flashcards[currentCard].id)}>
+                Known
+              </Button>
+              <Button color="error" onClick={() => markAsUnknown(flashcards[currentCard].id)}>
+                Unknown
+              </Button>
             </Box>
-          </Box>
+          </div>
         ) : (
           <Typography variant="h6" align="center">
             No flashcards available
           </Typography>
         )}
+
         <Box mt={3}>
           <Typography variant="body1" align="center">
             Known: {knownCount} | Unknown: {unknownCount}
