@@ -100,8 +100,8 @@ function FlashCard() {
 
         {flashcards.length > 0 ? (
           <div
-            className={`flashcard-container ${flipped ? 'flipped' : ''}`}
-            onClick={() => setFlipped(!flipped)}
+            className={`flashcard-container`}
+            onClick={() => setFlipped(!flipped)} // Flip on click
           >
             <div className={`flashcard ${flipped ? 'flipped' : ''}`}>
               <div className="flashcard-front">
