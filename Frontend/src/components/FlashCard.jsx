@@ -6,11 +6,13 @@ import {
   Button,
   TextField,
   Box,
+  Grid,
+  IconButton,
 } from '@mui/material';
 import { ArrowBack, ArrowForward, Delete } from '@mui/icons-material';
 import './Theme.css';
 
-const API_URL = import.meta.env.VITE_API_URL.replace(/\/+$/, '')
+const API_URL = import.meta.env.VITE_API_URL.replace(/\/+$/, '');
 
 function FlashCard() {
   const [flashcards, setFlashcards] = useState([]);
@@ -82,7 +84,7 @@ function FlashCard() {
       setFlashcards(unknownCards);
       setCurrentCard(0);
     } else {
-      alert("No unknown cards to review!");
+      alert('No unknown cards to review!');
     }
   };
 
@@ -92,7 +94,7 @@ function FlashCard() {
   return (
     <Box mt={4}>
       <Container maxWidth="sm">
-        <Typography variant="h1" align="center" gutterBottom>
+        <Typography variant="h4" align="center" gutterBottom>
           Flashcard App
         </Typography>
 
@@ -103,58 +105,48 @@ function FlashCard() {
           >
             <div className={`flashcard ${flipped ? 'flipped' : ''}`}>
               <div className="flashcard-front">
-                <Typography variant="h4" align="center">
+                <Typography variant="h6" align="center">
                   {flashcards[currentCard].question}
                 </Typography>
               </div>
               <div className="flashcard-back">
-                <Typography variant="h4" align="center">
+                <Typography variant="h6" align="center">
                   {flashcards[currentCard].answer}
                 </Typography>
               </div>
             </div>
-            <Box display="flex" justifyContent="space-between" p={2}>
-              <Button startIcon={<ArrowBack />} onClick={prevCard}>
-                Previous
-              </Button>
-              <Button endIcon={<ArrowForward />} onClick={nextCard}>
-                Next
-              </Button>
-              <Button
-                startIcon={<Delete />}
-                color="error"
-                onClick={() => deleteFlashcard(flashcards[currentCard].id)}
-              >
-                Delete
-              </Button>
-              <Button
-                color="success"
-                onClick={() => markAsKnown(flashcards[currentCard].id)}
-              >
+            <Box display="flex" justifyContent="space-between" p={2} flexWrap="wrap">
+              <IconButton onClick={prevCard}>
+                <ArrowBack />
+              </IconButton>
+              <IconButton onClick={nextCard}>
+                <ArrowForward />
+              </IconButton>
+              <IconButton color="error" onClick={() => deleteFlashcard(flashcards[currentCard].id)}>
+                <Delete />
+              </IconButton>
+              <Button color="success" onClick={() => markAsKnown(flashcards[currentCard].id)}>
                 Known
               </Button>
-              <Button
-                color="error"
-                onClick={() => markAsUnknown(flashcards[currentCard].id)}
-              >
+              <Button color="error" onClick={() => markAsUnknown(flashcards[currentCard].id)}>
                 Unknown
               </Button>
             </Box>
           </div>
         ) : (
-          <Typography variant="h4" align="center">
+          <Typography variant="h6" align="center">
             No flashcards available
           </Typography>
         )}
 
         <Box mt={3}>
-          <Typography variant="h6" align="center">
+          <Typography variant="body1" align="center">
             Known: {knownCount} | Unknown: {unknownCount}
           </Typography>
         </Box>
 
         <Box mt={3}>
-          <Typography variant="h4" align="center" gutterBottom>
+          <Typography variant="h5" align="center" gutterBottom>
             Add New Flashcard
           </Typography>
           <TextField
@@ -173,16 +165,18 @@ function FlashCard() {
             value={newAnswer}
             onChange={(e) => setNewAnswer(e.target.value)}
           />
-          <Box mt={2}>
-            <Button variant="contained" color="primary" fullWidth onClick={addFlashcard}>
-              Add Flashcard
-            </Button>
-          </Box>
-          <Box mt={2}>
-            <Button variant="contained" color="secondary" fullWidth onClick={reviewUnknownCards}>
-              Review Unknown Cards
-            </Button>
-          </Box>
+          <Grid container spacing={2} mt={2}>
+            <Grid item xs={12}>
+              <Button variant="contained" color="primary" fullWidth onClick={addFlashcard}>
+                Add Flashcard
+              </Button>
+            </Grid>
+            <Grid item xs={12}>
+              <Button variant="contained" color="secondary" fullWidth onClick={reviewUnknownCards}>
+                Review Unknown Cards
+              </Button>
+            </Grid>
+          </Grid>
         </Box>
       </Container>
     </Box>
